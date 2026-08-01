@@ -70,7 +70,7 @@
     .button-zone {
       position: relative;
       width: 100%;
-      height: 220px;
+      height: 240px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -105,8 +105,8 @@
       background: #334155;
       color: #94a3b8;
       z-index: 10;
-      transition: left 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       border: 1px solid rgba(255, 255, 255, 0.2);
+      pointer-events: auto;
     }
 
     /* PAGE 2 LAYOUT */
@@ -230,7 +230,7 @@
         font-size: 1.3rem;
       }
       .button-zone {
-        height: 180px;
+        height: 200px;
       }
     }
   </style>
@@ -338,54 +338,56 @@
       canvas.height = window.innerHeight;
     });
 
-    /* 2. IMPOSSIBLE 'NO' BUTTON - ORBITS AROUND YES BUTTON */
+    /* 2. CONTINUOUSLY ORBITING 'NO' BUTTON MECHANIC */
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
     const btnZone = document.getElementById('btnZone');
 
-    let currentAngle = 0;
-    const orbitRadius = 115; // Distance from center of YES button
+    let angle = 0;
+    const orbitSpeed = 0.035; // Speed of continuous revolution
+    const orbitRadius = 120; // Orbit distance around YES button
+    let animationFrameId;
 
-    function positionNoBtn(angle) {
+    function animateOrbit() {
+      angle += orbitSpeed;
+
       const yesRect = yesBtn.getBoundingClientRect();
       const zoneRect = btnZone.getBoundingClientRect();
 
-      // Find YES button center relative to container
       const yesCenterX = (yesRect.left + yesRect.width / 2) - zoneRect.left;
       const yesCenterY = (yesRect.top + yesRect.height / 2) - zoneRect.top;
 
       const noWidth = noBtn.offsetWidth || 100;
       const noHeight = noBtn.offsetHeight || 50;
 
-      // Position on circular path around YES button
       const x = yesCenterX + orbitRadius * Math.cos(angle) - (noWidth / 2);
       const y = yesCenterY + orbitRadius * Math.sin(angle) - (noHeight / 2);
 
       noBtn.style.left = `${x}px`;
       noBtn.style.top = `${y}px`;
+
+      animationFrameId = requestAnimationFrame(animateOrbit);
     }
 
-    function dodgeNoBtn() {
-      // Rotate by at least 90° plus a random angle to jump around YES
-      currentAngle += (Math.PI / 2) + (Math.random() * Math.PI);
-      positionNoBtn(currentAngle);
+    // Start continuous movement loop
+    animateOrbit();
+
+    // Sudden dodge if user gets cursor/finger near or clicks it
+    function dodge() {
+      angle += (Math.PI / 2) + (Math.random() * Math.PI);
     }
 
-    // Set initial position
-    setTimeout(() => positionNoBtn(currentAngle), 50);
-    window.addEventListener('resize', () => positionNoBtn(currentAngle));
-
-    // Dodge on hover, touch, pointer, or click attempt
     ['mouseenter', 'mousemove', 'mouseover', 'touchstart', 'pointerdown', 'click'].forEach(evt => {
       noBtn.addEventListener(evt, (e) => {
         e.preventDefault();
         e.stopPropagation();
-        dodgeNoBtn();
+        dodge();
       });
     });
 
     /* 3. SWITCH TO PAGE 2 & CONFETTI */
     function goToPage2() {
+      cancelAnimationFrame(animationFrameId); // stop orbit loop on page transition
       document.getElementById('page1').style.display = 'none';
       document.getElementById('page2').style.display = 'block';
 
@@ -402,7 +404,7 @@
     /* 4. PERMANENT IMAGE UPLOADER & LOCK SYSTEM */
     function triggerUpload(index) {
       let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
-      if (lockedPhotos[index]) return; // Slot already locked
+      if (lockedPhotos[index]) return;
       document.getElementById(`input-${index}`).click();
     }
 
