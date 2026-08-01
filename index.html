@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Happy Friendship Day Kanha ✨</title>
+  <title>Happy Friendship Day Swiggy ✨</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     * {
@@ -63,17 +63,18 @@
       font-size: 1.4rem;
       color: #fbcfe8;
       text-shadow: 0 0 8px rgba(251, 207, 232, 0.5);
-      margin-bottom: 50px;
+      margin-bottom: 70px;
     }
 
     /* BUTTON ZONE */
     .button-zone {
       position: relative;
       width: 100%;
-      height: 240px;
+      height: 250px;
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
     }
 
     .btn {
@@ -92,14 +93,14 @@
       color: white;
       z-index: 5;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative;
     }
 
     #yesBtn:hover {
-      transform: scale(1.15);
+      transform: scale(1.1);
       box-shadow: 0 0 30px rgba(244, 63, 94, 0.8);
     }
 
+    /* CONSTANTLY MOVING NO BUTTON */
     #noBtn {
       position: absolute;
       background: #334155;
@@ -107,6 +108,7 @@
       z-index: 10;
       border: 1px solid rgba(255, 255, 255, 0.2);
       pointer-events: auto;
+      will-change: left, top;
     }
 
     /* PAGE 2 LAYOUT */
@@ -119,39 +121,42 @@
       border-left: 4px solid #f472b6;
       border-radius: 8px;
       padding: 12px 18px;
-      margin-bottom: 15px;
+      margin-bottom: 25px;
       color: #fbcfe8;
       font-style: italic;
       font-size: 1rem;
       line-height: 1.4;
     }
 
-    /* CIRCULAR CONTAINER AROUND THE WISH */
-    .circle-wrapper {
-      position: relative;
-      width: 580px;
-      height: 580px;
-      margin: 10px auto;
+    /* 2-PHOTO WRAPPER LAYOUT */
+    .wish-container {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      gap: 30px;
+      margin: 20px auto;
     }
 
-    /* CENTER WISH TEXT */
+    /* WISH TEXT */
     .center-wish {
-      width: 250px;
       font-size: 2.2rem;
       color: #f472b6;
       text-shadow: 0 0 20px rgba(244, 114, 182, 0.9), 0 0 35px rgba(236, 72, 153, 0.6);
-      z-index: 2;
       line-height: 1.25;
     }
 
-    /* PHOTO SLOTS POSITIONED IN A CIRCLE */
+    .photos-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    /* PHOTO SLOTS */
     .photo-slot {
-      position: absolute;
-      width: 140px;
-      height: 140px;
+      width: 170px;
+      height: 170px;
       background: rgba(30, 20, 40, 0.9);
       border-radius: 50%;
       padding: 8px;
@@ -164,22 +169,15 @@
       transition: transform 0.3s ease;
     }
 
-    /* 5 Slots Circular Coordinates */
-    .slot-0 { top: 0px; left: 50%; transform: translateX(-50%); }
-    .slot-1 { top: 155px; right: 10px; }
-    .slot-2 { bottom: 50px; right: 80px; }
-    .slot-3 { bottom: 50px; left: 80px; }
-    .slot-4 { top: 155px; left: 10px; }
-
     /* PLUS ICON STYLING */
     .plus-btn {
-      width: 55px;
-      height: 55px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background: rgba(244, 114, 182, 0.15);
       border: 2px dashed #f472b6;
       color: #f472b6;
-      font-size: 2rem;
+      font-size: 2.2rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -207,30 +205,20 @@
 
     /* RESPONSIVE SCALING FOR MOBILE SCREENS */
     @media (max-width: 620px) {
-      .circle-wrapper {
-        width: 340px;
-        height: 340px;
-      }
       .center-wish {
-        width: 160px;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
+      }
+      .photos-row {
+        gap: 20px;
       }
       .photo-slot {
-        width: 85px;
-        height: 85px;
+        width: 130px;
+        height: 130px;
       }
-      .slot-0 { top: 0px; }
-      .slot-1 { top: 90px; right: -5px; }
-      .slot-2 { bottom: 25px; right: 35px; }
-      .slot-3 { bottom: 25px; left: 35px; }
-      .slot-4 { top: 90px; left: -5px; }
       .plus-btn {
-        width: 38px;
-        height: 38px;
-        font-size: 1.3rem;
-      }
-      .button-zone {
-        height: 200px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
       }
     }
   </style>
@@ -259,44 +247,26 @@
         "Friendship is not about who you've known the longest... It's about who came into your life, said 'I'm here for you,' and proved it." ✨
       </div>
 
-      <!-- 5 PHOTOS CIRCLE WRAPPER AROUND WISH -->
-      <div class="circle-wrapper">
-        
-        <!-- Center Wish -->
+      <div class="wish-container">
+        <!-- Wish Text -->
         <div class="center-wish">
-          Happy Friendship Day, Kanha! 💖
+          Happy Friendship Day, Swiggy! 💖
         </div>
 
-        <!-- Slot 0 (Top Center) -->
-        <div class="photo-slot slot-0" id="slot-0">
-          <div class="plus-btn" onclick="triggerUpload(0)">+</div>
-          <input type="file" id="input-0" accept="image/*" onchange="uploadSinglePhoto(event, 0)" />
-        </div>
+        <!-- 2 PHOTOS ROW -->
+        <div class="photos-row">
+          <!-- Slot 0 -->
+          <div class="photo-slot" id="slot-0">
+            <div class="plus-btn" onclick="triggerUpload(0)">+</div>
+            <input type="file" id="input-0" accept="image/*" onchange="uploadSinglePhoto(event, 0)" />
+          </div>
 
-        <!-- Slot 1 (Top Right) -->
-        <div class="photo-slot slot-1" id="slot-1">
-          <div class="plus-btn" onclick="triggerUpload(1)">+</div>
-          <input type="file" id="input-1" accept="image/*" onchange="uploadSinglePhoto(event, 1)" />
+          <!-- Slot 1 -->
+          <div class="photo-slot" id="slot-1">
+            <div class="plus-btn" onclick="triggerUpload(1)">+</div>
+            <input type="file" id="input-1" accept="image/*" onchange="uploadSinglePhoto(event, 1)" />
+          </div>
         </div>
-
-        <!-- Slot 2 (Bottom Right) -->
-        <div class="photo-slot slot-2" id="slot-2">
-          <div class="plus-btn" onclick="triggerUpload(2)">+</div>
-          <input type="file" id="input-2" accept="image/*" onchange="uploadSinglePhoto(event, 2)" />
-        </div>
-
-        <!-- Slot 3 (Bottom Left) -->
-        <div class="photo-slot slot-3" id="slot-3">
-          <div class="plus-btn" onclick="triggerUpload(3)">+</div>
-          <input type="file" id="input-3" accept="image/*" onchange="uploadSinglePhoto(event, 3)" />
-        </div>
-
-        <!-- Slot 4 (Top Left) -->
-        <div class="photo-slot slot-4" id="slot-4">
-          <div class="plus-btn" onclick="triggerUpload(4)">+</div>
-          <input type="file" id="input-4" accept="image/*" onchange="uploadSinglePhoto(event, 4)" />
-        </div>
-
       </div>
     </div>
   </div>
@@ -338,56 +308,71 @@
       canvas.height = window.innerHeight;
     });
 
-    /* 2. CONTINUOUSLY ORBITING 'NO' BUTTON MECHANIC */
+    /* 2. CONSTANTLY MOVING & BOUNCING NO BUTTON */
     const noBtn = document.getElementById('noBtn');
-    const yesBtn = document.getElementById('yesBtn');
     const btnZone = document.getElementById('btnZone');
 
-    let angle = 0;
-    const orbitSpeed = 0.035; // Speed of continuous revolution
-    const orbitRadius = 120; // Orbit distance around YES button
-    let animationFrameId;
+    // Position & Velocity parameters
+    let posX = 20;
+    let posY = 20;
+    let velX = 2.5; // Horizontal speed
+    let velY = 1.8; // Vertical speed
 
-    function animateOrbit() {
-      angle += orbitSpeed;
-
-      const yesRect = yesBtn.getBoundingClientRect();
+    function animateNoButton() {
       const zoneRect = btnZone.getBoundingClientRect();
+      const btnWidth = noBtn.offsetWidth || 100;
+      const btnHeight = noBtn.offsetHeight || 50;
 
-      const yesCenterX = (yesRect.left + yesRect.width / 2) - zoneRect.left;
-      const yesCenterY = (yesRect.top + yesRect.height / 2) - zoneRect.top;
+      const maxX = zoneRect.width - btnWidth;
+      const maxY = zoneRect.height - btnHeight;
 
-      const noWidth = noBtn.offsetWidth || 100;
-      const noHeight = noBtn.offsetHeight || 50;
+      // Update positions
+      posX += velX;
+      posY += velY;
 
-      const x = yesCenterX + orbitRadius * Math.cos(angle) - (noWidth / 2);
-      const y = yesCenterY + orbitRadius * Math.sin(angle) - (noHeight / 2);
+      // Bounce off boundaries of button-zone
+      if (posX <= 0 || posX >= maxX) {
+        velX *= -1;
+        posX = Math.max(0, Math.min(posX, maxX));
+      }
 
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top = `${y}px`;
+      if (posY <= 0 || posY >= maxY) {
+        velY *= -1;
+        posY = Math.max(0, Math.min(posY, maxY));
+      }
 
-      animationFrameId = requestAnimationFrame(animateOrbit);
+      noBtn.style.left = `${posX}px`;
+      noBtn.style.top = `${posY}px`;
+
+      requestAnimationFrame(animateNoButton);
+    }
+    
+    // Start continuous loop
+    requestAnimationFrame(animateNoButton);
+
+    // Extra flight boost if cursor/finger comes close
+    function fleeIfClose(e) {
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      const btnRect = noBtn.getBoundingClientRect();
+      const btnCenterX = btnRect.left + btnRect.width / 2;
+      const btnCenterY = btnRect.top + btnRect.height / 2;
+
+      const dist = Math.hypot(clientX - btnCenterX, clientY - btnCenterY);
+
+      if (dist < 90) {
+        // Reverse direction and accelerate away!
+        velX = (clientX > btnCenterX ? -1 : 1) * (3.5 + Math.random() * 2);
+        velY = (clientY > btnCenterY ? -1 : 1) * (3.5 + Math.random() * 2);
+      }
     }
 
-    // Start continuous movement loop
-    animateOrbit();
-
-    // Sudden dodge if user gets cursor/finger near or clicks it
-    function dodge() {
-      angle += (Math.PI / 2) + (Math.random() * Math.PI);
-    }
-
-    ['mouseenter', 'mousemove', 'mouseover', 'touchstart', 'pointerdown', 'click'].forEach(evt => {
-      noBtn.addEventListener(evt, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        dodge();
-      });
-    });
+    window.addEventListener('mousemove', fleeIfClose);
+    window.addEventListener('touchmove', fleeIfClose);
 
     /* 3. SWITCH TO PAGE 2 & CONFETTI */
     function goToPage2() {
-      cancelAnimationFrame(animationFrameId); // stop orbit loop on page transition
       document.getElementById('page1').style.display = 'none';
       document.getElementById('page2').style.display = 'block';
 
@@ -403,8 +388,8 @@
 
     /* 4. PERMANENT IMAGE UPLOADER & LOCK SYSTEM */
     function triggerUpload(index) {
-      let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
-      if (lockedPhotos[index]) return;
+      let lockedPhotos = JSON.parse(localStorage.getItem('swiggy_photos') || '{}');
+      if (lockedPhotos[index]) return; // Slot already locked
       document.getElementById(`input-${index}`).click();
     }
 
@@ -414,30 +399,28 @@
 
       const reader = new FileReader();
       reader.onload = function (e) {
-        let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
+        let lockedPhotos = JSON.parse(localStorage.getItem('swiggy_photos') || '{}');
         
+        // Save image permanently to specific circular slot
         lockedPhotos[index] = {
           imgSrc: e.target.result
         };
 
-        try {
-          localStorage.setItem('kanha_circle_photos', JSON.stringify(lockedPhotos));
-          renderLockedPhotos();
-        } catch (err) {
-          alert("Photo file size is too large for local browser storage. Please try a smaller image!");
-        }
+        localStorage.setItem('swiggy_photos', JSON.stringify(lockedPhotos));
+        renderLockedPhotos();
       };
 
       reader.readAsDataURL(file);
     }
 
     function renderLockedPhotos() {
-      let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
+      let lockedPhotos = JSON.parse(localStorage.getItem('swiggy_photos') || '{}');
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 2; i++) {
         const slotEl = document.getElementById(`slot-${i}`);
         if (lockedPhotos[i]) {
-          slotEl.innerHTML = `<img src="${lockedPhotos[i].imgSrc}" alt="Memory with Kanha" />`;
+          // Replace plus button with locked circular image
+          slotEl.innerHTML = `<img src="${lockedPhotos[i].imgSrc}" alt="Memory with Swiggy" />`;
           slotEl.style.cursor = "default";
         }
       }
