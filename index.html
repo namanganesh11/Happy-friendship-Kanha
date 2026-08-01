@@ -63,17 +63,17 @@
       font-size: 1.4rem;
       color: #fbcfe8;
       text-shadow: 0 0 8px rgba(251, 207, 232, 0.5);
-      margin-bottom: 70px;
+      margin-bottom: 50px;
     }
 
     /* BUTTON ZONE */
     .button-zone {
       position: relative;
       width: 100%;
-      height: 120px;
+      height: 220px;
       display: flex;
       justify-content: center;
-      align-items: flex-end;
+      align-items: center;
     }
 
     .btn {
@@ -92,10 +92,11 @@
       color: white;
       z-index: 5;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
     }
 
     #yesBtn:hover {
-      transform: scale(1.1);
+      transform: scale(1.15);
       box-shadow: 0 0 30px rgba(244, 63, 94, 0.8);
     }
 
@@ -104,7 +105,7 @@
       background: #334155;
       color: #94a3b8;
       z-index: 10;
-      transition: left 0.15s ease-out, top 0.15s ease-out;
+      transition: left 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
@@ -152,7 +153,7 @@
       width: 140px;
       height: 140px;
       background: rgba(30, 20, 40, 0.9);
-      border-radius: 50%; /* Circular photo frames */
+      border-radius: 50%;
       padding: 8px;
       border: 2px solid rgba(244, 114, 182, 0.4);
       box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
@@ -163,12 +164,12 @@
       transition: transform 0.3s ease;
     }
 
-    /* 5 Slots Circular Coordinates (360 / 5 = 72 degree steps) */
-    .slot-0 { top: 0px; left: 50%; transform: translateX(-50%); }                   /* Top Center */
-    .slot-1 { top: 155px; right: 10px; }                                            /* Top Right */
-    .slot-2 { bottom: 50px; right: 80px; }                                          /* Bottom Right */
-    .slot-3 { bottom: 50px; left: 80px; }                                           /* Bottom Left */
-    .slot-4 { top: 155px; left: 10px; }                                             /* Top Left */
+    /* 5 Slots Circular Coordinates */
+    .slot-0 { top: 0px; left: 50%; transform: translateX(-50%); }
+    .slot-1 { top: 155px; right: 10px; }
+    .slot-2 { bottom: 50px; right: 80px; }
+    .slot-3 { bottom: 50px; left: 80px; }
+    .slot-4 { top: 155px; left: 10px; }
 
     /* PLUS ICON STYLING */
     .plus-btn {
@@ -227,6 +228,9 @@
         width: 38px;
         height: 38px;
         font-size: 1.3rem;
+      }
+      .button-zone {
+        height: 180px;
       }
     }
   </style>
@@ -334,34 +338,50 @@
       canvas.height = window.innerHeight;
     });
 
-    /* 2. IMPOSSIBLE 'NO' BUTTON DODGE LOGIC */
+    /* 2. IMPOSSIBLE 'NO' BUTTON - ORBITS AROUND YES BUTTON */
     const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
     const btnZone = document.getElementById('btnZone');
 
-    function resetNoPosition() {
-      noBtn.style.left = `calc(50% + 120px)`;
-      noBtn.style.top = `20px`;
-    }
-    resetNoPosition();
+    let currentAngle = 0;
+    const orbitRadius = 115; // Distance from center of YES button
 
-    function moveNoBtnAway() {
+    function positionNoBtn(angle) {
+      const yesRect = yesBtn.getBoundingClientRect();
       const zoneRect = btnZone.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
 
-      const maxX = zoneRect.width - btnRect.width;
-      const maxY = zoneRect.height - btnRect.height;
+      // Find YES button center relative to container
+      const yesCenterX = (yesRect.left + yesRect.width / 2) - zoneRect.left;
+      const yesCenterY = (yesRect.top + yesRect.height / 2) - zoneRect.top;
 
-      let newX = Math.random() * maxX;
-      let newY = Math.random() * maxY;
+      const noWidth = noBtn.offsetWidth || 100;
+      const noHeight = noBtn.offsetHeight || 50;
 
-      noBtn.style.left = `${newX}px`;
-      noBtn.style.top = `${newY}px`;
+      // Position on circular path around YES button
+      const x = yesCenterX + orbitRadius * Math.cos(angle) - (noWidth / 2);
+      const y = yesCenterY + orbitRadius * Math.sin(angle) - (noHeight / 2);
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
     }
 
-    noBtn.addEventListener('mouseenter', moveNoBtnAway);
-    noBtn.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      moveNoBtnAway();
+    function dodgeNoBtn() {
+      // Rotate by at least 90° plus a random angle to jump around YES
+      currentAngle += (Math.PI / 2) + (Math.random() * Math.PI);
+      positionNoBtn(currentAngle);
+    }
+
+    // Set initial position
+    setTimeout(() => positionNoBtn(currentAngle), 50);
+    window.addEventListener('resize', () => positionNoBtn(currentAngle));
+
+    // Dodge on hover, touch, pointer, or click attempt
+    ['mouseenter', 'mousemove', 'mouseover', 'touchstart', 'pointerdown', 'click'].forEach(evt => {
+      noBtn.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dodgeNoBtn();
+      });
     });
 
     /* 3. SWITCH TO PAGE 2 & CONFETTI */
@@ -394,7 +414,6 @@
       reader.onload = function (e) {
         let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
         
-        // Save image permanently to specific circular slot
         lockedPhotos[index] = {
           imgSrc: e.target.result
         };
@@ -416,7 +435,6 @@
       for (let i = 0; i < 5; i++) {
         const slotEl = document.getElementById(`slot-${i}`);
         if (lockedPhotos[i]) {
-          // Replace plus button with locked circular image
           slotEl.innerHTML = `<img src="${lockedPhotos[i].imgSrc}" alt="Memory with Kanha" />`;
           slotEl.style.cursor = "default";
         }
