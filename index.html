@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Friendship Day Kanha ✨</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #05020a;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* PINK DIGITAL RAIN CANVAS */
+    #pinkRainCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    /* CONTAINER STYLING */
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 95%;
+      max-width: 950px;
+      text-align: center;
+      background: rgba(18, 5, 25, 0.88);
+      backdrop-filter: blur(14px);
+      padding: 30px 15px;
+      border-radius: 24px;
+      border: 1px solid rgba(244, 114, 182, 0.3);
+      box-shadow: 0 0 35px rgba(236, 72, 153, 0.25);
+      margin: 20px 0;
+    }
+
+    /* PAGE 1: FRONT QUESTION SCREEN */
+    #page1 h1 {
+      font-size: 2.8rem;
+      color: #f472b6;
+      text-shadow: 0 0 15px rgba(244, 114, 182, 0.8), 0 0 30px rgba(236, 72, 153, 0.4);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    #page1 p.sub-text {
+      font-size: 1.4rem;
+      color: #fbcfe8;
+      text-shadow: 0 0 8px rgba(251, 207, 232, 0.5);
+      margin-bottom: 70px;
+    }
+
+    /* BUTTON ZONE */
+    .button-zone {
+      position: relative;
+      width: 100%;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .btn {
+      padding: 14px 40px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+    }
+
+    #yesBtn {
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: white;
+      z-index: 5;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #yesBtn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(244, 63, 94, 0.8);
+    }
+
+    #noBtn {
+      position: absolute;
+      background: #334155;
+      color: #94a3b8;
+      z-index: 10;
+      transition: left 0.15s ease-out, top 0.15s ease-out;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* PAGE 2 LAYOUT */
+    #page2 {
+      display: none;
+    }
+
+    .quote-box {
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 4px solid #f472b6;
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 15px;
+      color: #fbcfe8;
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    /* CIRCULAR CONTAINER AROUND THE WISH */
+    .circle-wrapper {
+      position: relative;
+      width: 580px;
+      height: 580px;
+      margin: 10px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CENTER WISH TEXT */
+    .center-wish {
+      width: 250px;
+      font-size: 2.2rem;
+      color: #f472b6;
+      text-shadow: 0 0 20px rgba(244, 114, 182, 0.9), 0 0 35px rgba(236, 72, 153, 0.6);
+      z-index: 2;
+      line-height: 1.25;
+    }
+
+    /* PHOTO SLOTS POSITIONED IN A CIRCLE */
+    .photo-slot {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      background: rgba(30, 20, 40, 0.9);
+      border-radius: 50%; /* Circular photo frames */
+      padding: 8px;
+      border: 2px solid rgba(244, 114, 182, 0.4);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    /* 5 Slots Circular Coordinates (360 / 5 = 72 degree steps) */
+    .slot-0 { top: 0px; left: 50%; transform: translateX(-50%); }                   /* Top Center */
+    .slot-1 { top: 155px; right: 10px; }                                            /* Top Right */
+    .slot-2 { bottom: 50px; right: 80px; }                                          /* Bottom Right */
+    .slot-3 { bottom: 50px; left: 80px; }                                           /* Bottom Left */
+    .slot-4 { top: 155px; left: 10px; }                                             /* Top Left */
+
+    /* PLUS ICON STYLING */
+    .plus-btn {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: rgba(244, 114, 182, 0.15);
+      border: 2px dashed #f472b6;
+      color: #f472b6;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .plus-btn:hover {
+      transform: scale(1.15);
+      background: rgba(244, 114, 182, 0.35);
+      box-shadow: 0 0 20px rgba(244, 114, 182, 0.6);
+    }
+
+    /* DISPLAYED LOCKED IMAGE */
+    .photo-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* RESPONSIVE SCALING FOR MOBILE SCREENS */
+    @media (max-width: 620px) {
+      .circle-wrapper {
+        width: 340px;
+        height: 340px;
+      }
+      .center-wish {
+        width: 160px;
+        font-size: 1.4rem;
+      }
+      .photo-slot {
+        width: 85px;
+        height: 85px;
+      }
+      .slot-0 { top: 0px; }
+      .slot-1 { top: 90px; right: -5px; }
+      .slot-2 { bottom: 25px; right: 35px; }
+      .slot-3 { bottom: 25px; left: 35px; }
+      .slot-4 { top: 90px; left: -5px; }
+      .plus-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PINK DIGITAL RAIN CANVAS -->
+  <canvas id="pinkRainCanvas"></canvas>
+
+  <div class="container">
+    <!-- PAGE 1 -->
+    <div id="page1">
+      <h1>Happy Friendship Day</h1>
+      <p class="sub-text">Will you be my friend forever?</p>
+
+      <div class="button-zone" id="btnZone">
+        <button class="btn" id="yesBtn" onclick="goToPage2()">YES! ❤️</button>
+        <button class="btn" id="noBtn">NO 😜</button>
+      </div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div id="page2">
+      <!-- Friendship Quote -->
+      <div class="quote-box">
+        "Friendship is not about who you've known the longest... It's about who came into your life, said 'I'm here for you,' and proved it." ✨
+      </div>
+
+      <!-- 5 PHOTOS CIRCLE WRAPPER AROUND WISH -->
+      <div class="circle-wrapper">
+        
+        <!-- Center Wish -->
+        <div class="center-wish">
+          Happy Friendship Day, Kanha! 💖
+        </div>
+
+        <!-- Slot 0 (Top Center) -->
+        <div class="photo-slot slot-0" id="slot-0">
+          <div class="plus-btn" onclick="triggerUpload(0)">+</div>
+          <input type="file" id="input-0" accept="image/*" onchange="uploadSinglePhoto(event, 0)" />
+        </div>
+
+        <!-- Slot 1 (Top Right) -->
+        <div class="photo-slot slot-1" id="slot-1">
+          <div class="plus-btn" onclick="triggerUpload(1)">+</div>
+          <input type="file" id="input-1" accept="image/*" onchange="uploadSinglePhoto(event, 1)" />
+        </div>
+
+        <!-- Slot 2 (Bottom Right) -->
+        <div class="photo-slot slot-2" id="slot-2">
+          <div class="plus-btn" onclick="triggerUpload(2)">+</div>
+          <input type="file" id="input-2" accept="image/*" onchange="uploadSinglePhoto(event, 2)" />
+        </div>
+
+        <!-- Slot 3 (Bottom Left) -->
+        <div class="photo-slot slot-3" id="slot-3">
+          <div class="plus-btn" onclick="triggerUpload(3)">+</div>
+          <input type="file" id="input-3" accept="image/*" onchange="uploadSinglePhoto(event, 3)" />
+        </div>
+
+        <!-- Slot 4 (Top Left) -->
+        <div class="photo-slot slot-4" id="slot-4">
+          <div class="plus-btn" onclick="triggerUpload(4)">+</div>
+          <input type="file" id="input-4" accept="image/*" onchange="uploadSinglePhoto(event, 4)" />
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* 1. PINK RAIN MATRIX ANIMATION */
+    const canvas = document.getElementById('pinkRainCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const pinkChars = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ💕✨🌸💖';
+    const fontSize = 16;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = Array(columns).fill(1);
+
+    function drawPinkRain() {
+      ctx.fillStyle = 'rgba(5, 2, 10, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#f472b6';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = pinkChars.charAt(Math.floor(Math.random() * pinkChars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawPinkRain, 33);
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    /* 2. IMPOSSIBLE 'NO' BUTTON DODGE LOGIC */
+    const noBtn = document.getElementById('noBtn');
+    const btnZone = document.getElementById('btnZone');
+
+    function resetNoPosition() {
+      noBtn.style.left = `calc(50% + 120px)`;
+      noBtn.style.top = `20px`;
+    }
+    resetNoPosition();
+
+    function moveNoBtnAway() {
+      const zoneRect = btnZone.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = zoneRect.width - btnRect.width;
+      const maxY = zoneRect.height - btnRect.height;
+
+      let newX = Math.random() * maxX;
+      let newY = Math.random() * maxY;
+
+      noBtn.style.left = `${newX}px`;
+      noBtn.style.top = `${newY}px`;
+    }
+
+    noBtn.addEventListener('mouseenter', moveNoBtnAway);
+    noBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      moveNoBtnAway();
+    });
+
+    /* 3. SWITCH TO PAGE 2 & CONFETTI */
+    function goToPage2() {
+      document.getElementById('page1').style.display = 'none';
+      document.getElementById('page2').style.display = 'block';
+
+      confetti({
+        particleCount: 160,
+        spread: 90,
+        origin: { y: 0.5 },
+        colors: ['#f472b6', '#ec4899', '#ffffff']
+      });
+
+      renderLockedPhotos();
+    }
+
+    /* 4. PERMANENT IMAGE UPLOADER & LOCK SYSTEM */
+    function triggerUpload(index) {
+      let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
+      if (lockedPhotos[index]) return; // Slot already locked
+      document.getElementById(`input-${index}`).click();
+    }
+
+    function uploadSinglePhoto(event, index) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
+        
+        // Save image permanently to specific circular slot
+        lockedPhotos[index] = {
+          imgSrc: e.target.result
+        };
+
+        try {
+          localStorage.setItem('kanha_circle_photos', JSON.stringify(lockedPhotos));
+          renderLockedPhotos();
+        } catch (err) {
+          alert("Photo file size is too large for local browser storage. Please try a smaller image!");
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function renderLockedPhotos() {
+      let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
+
+      for (let i = 0; i < 5; i++) {
+        const slotEl = document.getElementById(`slot-${i}`);
+        if (lockedPhotos[i]) {
+          // Replace plus button with locked circular image
+          slotEl.innerHTML = `<img src="${lockedPhotos[i].imgSrc}" alt="Memory with Kanha" />`;
+          slotEl.style.cursor = "default";
+        }
+      }
+    }
+  </script>
+</body>
+</html>
