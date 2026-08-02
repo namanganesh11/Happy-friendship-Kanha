@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Happy Friendship Day Kanha ✨</title>
+  <title>Happy Friendship Day Kanha, Radha, Balaram ✨</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     * {
@@ -139,8 +139,8 @@
 
     /* CENTER WISH TEXT */
     .center-wish {
-      width: 250px;
-      font-size: 2.2rem;
+      width: 270px;
+      font-size: 1.8rem;
       color: #f472b6;
       text-shadow: 0 0 20px rgba(244, 114, 182, 0.9), 0 0 35px rgba(236, 72, 153, 0.6);
       z-index: 2;
@@ -161,7 +161,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     /* 5 Slots Circular Coordinates */
@@ -171,38 +171,58 @@
     .slot-3 { bottom: 50px; left: 80px; }
     .slot-4 { top: 155px; left: 10px; }
 
-    /* PLUS ICON STYLING */
-    .plus-btn {
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      background: rgba(244, 114, 182, 0.15);
-      border: 2px dashed #f472b6;
-      color: #f472b6;
-      font-size: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .plus-btn:hover {
-      transform: scale(1.15);
-      background: rgba(244, 114, 182, 0.35);
-      box-shadow: 0 0 20px rgba(244, 114, 182, 0.6);
-    }
-
     /* DISPLAYED LOCKED IMAGE */
     .photo-slot img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
+      cursor: pointer;
     }
 
-    input[type="file"] {
+    .photo-slot:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(244, 114, 182, 0.8);
+    }
+    .slot-0:hover { transform: translateX(-50%) scale(1.1); }
+
+    /* LIGHTBOX MODAL FOR ENLARGING IMAGES */
+    #lightboxModal {
       display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(5, 2, 10, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      cursor: pointer;
+      animation: fadeIn 0.3s ease;
+    }
+
+    #lightboxModal img {
+      max-width: 85vw;
+      max-height: 80vh;
+      border-radius: 16px;
+      border: 3px solid #f472b6;
+      box-shadow: 0 0 40px rgba(244, 114, 182, 0.6);
+      object-fit: contain;
+    }
+
+    #lightboxModal .close-hint {
+      margin-top: 15px;
+      color: #fbcfe8;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     /* RESPONSIVE SCALING FOR MOBILE SCREENS */
@@ -213,7 +233,7 @@
       }
       .center-wish {
         width: 160px;
-        font-size: 1.4rem;
+        font-size: 1.2rem;
       }
       .photo-slot {
         width: 85px;
@@ -224,11 +244,6 @@
       .slot-2 { bottom: 25px; right: 35px; }
       .slot-3 { bottom: 25px; left: 35px; }
       .slot-4 { top: 90px; left: -5px; }
-      .plus-btn {
-        width: 38px;
-        height: 38px;
-        font-size: 1.3rem;
-      }
       .button-zone {
         height: 200px;
       }
@@ -264,41 +279,42 @@
         
         <!-- Center Wish -->
         <div class="center-wish">
-          Happy Friendship Day, Kanha! 💖
+          Happy Friendship Day,<br>Kanha, Radha, Balaram! 💖
         </div>
 
         <!-- Slot 0 (Top Center) -->
-        <div class="photo-slot slot-0" id="slot-0">
-          <div class="plus-btn" onclick="triggerUpload(0)">+</div>
-          <input type="file" id="input-0" accept="image/*" onchange="uploadSinglePhoto(event, 0)" />
+        <div class="photo-slot slot-0">
+          <img src="https://i.ibb.co/fYbW4pmC/image.jpg" alt="Kanha, Radha, Balaram" onclick="openLightbox(this.src)" />
         </div>
 
         <!-- Slot 1 (Top Right) -->
-        <div class="photo-slot slot-1" id="slot-1">
-          <div class="plus-btn" onclick="triggerUpload(1)">+</div>
-          <input type="file" id="input-1" accept="image/*" onchange="uploadSinglePhoto(event, 1)" />
+        <div class="photo-slot slot-1">
+          <img src="https://i.ibb.co/Kzrmmp4m/image.jpg" alt="Kanha, Radha, Balaram" onclick="openLightbox(this.src)" />
         </div>
 
         <!-- Slot 2 (Bottom Right) -->
-        <div class="photo-slot slot-2" id="slot-2">
-          <div class="plus-btn" onclick="triggerUpload(2)">+</div>
-          <input type="file" id="input-2" accept="image/*" onchange="uploadSinglePhoto(event, 2)" />
+        <div class="photo-slot slot-2">
+          <img src="https://i.ibb.co/gZpdPdJ7/image.jpg" alt="Kanha, Radha, Balaram" onclick="openLightbox(this.src)" />
         </div>
 
         <!-- Slot 3 (Bottom Left) -->
-        <div class="photo-slot slot-3" id="slot-3">
-          <div class="plus-btn" onclick="triggerUpload(3)">+</div>
-          <input type="file" id="input-3" accept="image/*" onchange="uploadSinglePhoto(event, 3)" />
+        <div class="photo-slot slot-3">
+          <img src="https://i.ibb.co/s9159p0y/image.jpg" alt="Kanha, Radha, Balaram" onclick="openLightbox(this.src)" />
         </div>
 
         <!-- Slot 4 (Top Left) -->
-        <div class="photo-slot slot-4" id="slot-4">
-          <div class="plus-btn" onclick="triggerUpload(4)">+</div>
-          <input type="file" id="input-4" accept="image/*" onchange="uploadSinglePhoto(event, 4)" />
+        <div class="photo-slot slot-4">
+          <img src="https://i.ibb.co/nTvbD3W/image.jpg" alt="Kanha, Radha, Balaram" onclick="openLightbox(this.src)" />
         </div>
 
       </div>
     </div>
+  </div>
+
+  <!-- FULLSCREEN LIGHTBOX MODAL -->
+  <div id="lightboxModal" onclick="closeLightbox()">
+    <img id="lightboxImg" src="" alt="Enlarged Memory" />
+    <div class="close-hint">Click anywhere to close ✨</div>
   </div>
 
   <script>
@@ -344,8 +360,8 @@
     const btnZone = document.getElementById('btnZone');
 
     let angle = 0;
-    const orbitSpeed = 0.035; // Speed of continuous revolution
-    const orbitRadius = 120; // Orbit distance around YES button
+    const orbitSpeed = 0.035;
+    const orbitRadius = 120;
     let animationFrameId;
 
     function animateOrbit() {
@@ -369,10 +385,8 @@
       animationFrameId = requestAnimationFrame(animateOrbit);
     }
 
-    // Start continuous movement loop
     animateOrbit();
 
-    // Sudden dodge if user gets cursor/finger near or clicks it
     function dodge() {
       angle += (Math.PI / 2) + (Math.random() * Math.PI);
     }
@@ -387,7 +401,7 @@
 
     /* 3. SWITCH TO PAGE 2 & CONFETTI */
     function goToPage2() {
-      cancelAnimationFrame(animationFrameId); // stop orbit loop on page transition
+      cancelAnimationFrame(animationFrameId);
       document.getElementById('page1').style.display = 'none';
       document.getElementById('page2').style.display = 'block';
 
@@ -397,50 +411,18 @@
         origin: { y: 0.5 },
         colors: ['#f472b6', '#ec4899', '#ffffff']
       });
-
-      renderLockedPhotos();
     }
 
-    /* 4. PERMANENT IMAGE UPLOADER & LOCK SYSTEM */
-    function triggerUpload(index) {
-      let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
-      if (lockedPhotos[index]) return;
-      document.getElementById(`input-${index}`).click();
+    /* 4. LIGHTBOX MODAL FUNCTIONS */
+    function openLightbox(imgSrc) {
+      const modal = document.getElementById('lightboxModal');
+      const modalImg = document.getElementById('lightboxImg');
+      modalImg.src = imgSrc;
+      modal.style.display = 'flex';
     }
 
-    function uploadSinglePhoto(event, index) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
-        
-        lockedPhotos[index] = {
-          imgSrc: e.target.result
-        };
-
-        try {
-          localStorage.setItem('kanha_circle_photos', JSON.stringify(lockedPhotos));
-          renderLockedPhotos();
-        } catch (err) {
-          alert("Photo file size is too large for local browser storage. Please try a smaller image!");
-        }
-      };
-
-      reader.readAsDataURL(file);
-    }
-
-    function renderLockedPhotos() {
-      let lockedPhotos = JSON.parse(localStorage.getItem('kanha_circle_photos') || '{}');
-
-      for (let i = 0; i < 5; i++) {
-        const slotEl = document.getElementById(`slot-${i}`);
-        if (lockedPhotos[i]) {
-          slotEl.innerHTML = `<img src="${lockedPhotos[i].imgSrc}" alt="Memory with Kanha" />`;
-          slotEl.style.cursor = "default";
-        }
-      }
+    function closeLightbox() {
+      document.getElementById('lightboxModal').style.display = 'none';
     }
   </script>
 </body>
